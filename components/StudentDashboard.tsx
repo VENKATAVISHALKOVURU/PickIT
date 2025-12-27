@@ -639,7 +639,12 @@ const StudentDashboard: React.FC<Props> = ({ activeJob, setActiveJob, shop, isSt
               <p className="text-indigo-100 text-[11px] font-bold uppercase tracking-widest">ID: {activeJob.id.split('-')[1]}</p>
             </div>
           </div>
-          <button className="w-full bg-white text-indigo-600 font-bold py-5 rounded-[1.5rem] active:scale-95 transition-all">Show QR to Shop</button>
+          <button
+            onClick={() => setActiveJob(null)}
+            className="w-full bg-white text-indigo-600 font-bold py-5 rounded-[1.5rem] active:scale-95 transition-all shadow-lg hover:shadow-xl"
+          >
+            <i className="fa-solid fa-check-circle mr-2"></i> Mark as Collected
+          </button>
         </div>
       )}
 
