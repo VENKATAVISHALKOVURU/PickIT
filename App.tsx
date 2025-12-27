@@ -6,6 +6,7 @@ import OwnerDashboard from './components/OwnerDashboard';
 import MenuOverlay from './components/MenuOverlay';
 import Onboarding from './components/Onboarding';
 import { Icons } from './constants';
+import { Peer, DataConnection } from 'peerjs';
 
 const App: React.FC = () => {
   const [role, setRole] = useState<UserRole | null>(null);
@@ -38,6 +39,71 @@ const App: React.FC = () => {
       pricing: { bw_ss: 2, bw_ds: 3, color_ss: 10, color_ds: 15 }
     };
   });
+
+  // P2P Refs
+  const peerRef = React.useRef<Peer | null>(null);
+  const connRef = React.useRef<DataConnection | null>(null);
+
+  // Initial Sync Logic (P2P)
+  useEffect(() => {
+    // Cleanup previous peer/conn on role/shop change
+    if (peerRef.current) { peerRef.current.destroy(); peerRef.current = null; }
+    if (connRef.current) { connRef.current.close(); connRef.current = null; }
+
+    const peerId = 'pickit-shop-' + shop.id;
+
+    if (role === UserRole.OWNER) {
+      // OWNER: Host the peer
+      const peer = new Peer(peerId);
+      peerRef.current = peer;
+
+      peer.on('open', (id) => {
+        console.log('Owner Peer ID:', id);
+      });
+
+      peer.on('connection', (conn) => {
+        console.log('Student connected:', conn.peer);
+        connRef.current = conn;
+
+        conn.on('data', (data: any) => {
+          console.log('Received data:', data);
+          if (data.type === 'JOB_UPDATE') {
+            setActiveJob(data.payload);
+          }
+        });
+      });
+
+    } else if (role === UserRole.STUDENT && isStudentConnected) {
+      // STUDENT: Connect to the shop peer
+      const peer = new Peer(); // Auto-ID for student
+      peerRef.current = peer;
+
+      peer.on('open', () => {
+        const conn = peer.connect(peerId);
+        connRef.current = conn;
+
+        conn.on('open', () => {
+          console.log('Connected to Shop:', peerId);
+          // If we have an active job, sync it immediately
+          if (activeJob) {
+            conn.send({ type: 'JOB_UPDATE', payload: activeJob });
+          }
+        });
+      });
+    }
+
+    return () => {
+      // Cleanup on unmount or deps change handled at start of effect
+    };
+  }, [role, shop.id, isStudentConnected]); // Re-run if role, shop ID, or connection status changes
+
+  // Wrapper to broadcast updates
+  const handleStudentJobUpdate = (job: PrintJob | null) => {
+    setActiveJob(job);
+    if (role === UserRole.STUDENT && connRef.current && connRef.current.open) {
+      connRef.current.send({ type: 'JOB_UPDATE', payload: job });
+    }
+  };
 
   // Persistence Effects
   useEffect(() => {
@@ -190,7 +256,7 @@ const App: React.FC = () => {
         {role === UserRole.STUDENT ? (
           <StudentDashboard
             activeJob={activeJob}
-            setActiveJob={setActiveJob}
+            setActiveJob={handleStudentJobUpdate}
             shop={shop}
             isStudentConnected={isStudentConnected}
             onConnectShop={handleConnectShop}

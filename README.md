@@ -3,7 +3,7 @@
 </div>
 
 # PickIT - From Request to Ready
-> **Deployment Status**: Version 1.1.0 (Fixed Persistence & QR Stability)
+> **Deployment Status**: Version 1.2.0 (Added Real-Time P2P Sync)
 
 This contains everything you need to run your app locally.
 
