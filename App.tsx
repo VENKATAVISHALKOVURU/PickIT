@@ -15,24 +15,42 @@ const App: React.FC = () => {
   const [isStudentConnected, setIsStudentConnected] = useState(false);
 
   // Shared State
-  const [activeJob, setActiveJob] = useState<PrintJob | null>(null);
-  const [jobHistory, setJobHistory] = useState<PrintJob[]>([]);
-
-  const [shop, setShop] = useState<Shop>({
-    id: 'SHOP-' + Math.floor(1000 + Math.random() * 9000),
-    name: '',
-    location: '',
-    printerCount: 1,
-    ppm: 20,
-    isPaused: false,
-    isConfigured: false,
-    pricing: {
-      bw_ss: 2,
-      bw_ds: 3,
-      color_ss: 10,
-      color_ds: 15
-    }
+  const [activeJob, setActiveJob] = useState<PrintJob | null>(() => {
+    const saved = localStorage.getItem('pickit_active_job');
+    return saved ? JSON.parse(saved) : null;
   });
+
+  const [jobHistory, setJobHistory] = useState<PrintJob[]>(() => {
+    const saved = localStorage.getItem('pickit_job_history');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [shop, setShop] = useState<Shop>(() => {
+    const saved = localStorage.getItem('pickit_shop_data');
+    return saved ? JSON.parse(saved) : {
+      id: 'SHOP-' + Math.floor(1000 + Math.random() * 9000),
+      name: '',
+      location: '',
+      printerCount: 1,
+      ppm: 20,
+      isPaused: false,
+      isConfigured: false,
+      pricing: { bw_ss: 2, bw_ds: 3, color_ss: 10, color_ds: 15 }
+    };
+  });
+
+  // Persistence Effects
+  useEffect(() => {
+    localStorage.setItem('pickit_active_job', JSON.stringify(activeJob));
+  }, [activeJob]);
+
+  useEffect(() => {
+    localStorage.setItem('pickit_job_history', JSON.stringify(jobHistory));
+  }, [jobHistory]);
+
+  useEffect(() => {
+    localStorage.setItem('pickit_shop_data', JSON.stringify(shop));
+  }, [shop]);
 
   // Persist role and user on launch
   useEffect(() => {

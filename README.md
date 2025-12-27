@@ -3,7 +3,7 @@
 </div>
 
 # PickIT - From Request to Ready
-> **Deployment Status**: Latest Build Triggered [Force Update]
+> **Deployment Status**: Version 1.1.0 (Fixed Persistence & QR Stability)
 
 This contains everything you need to run your app locally.
 

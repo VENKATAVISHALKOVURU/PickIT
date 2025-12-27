@@ -137,7 +137,7 @@ const MenuOverlay: React.FC<Props> = ({
             <h3 className="text-xl font-bold mb-6 text-left">Shop Identity</h3>
             <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm inline-block w-full">
               <div className="w-44 h-44 bg-slate-50 rounded-3xl mx-auto flex items-center justify-center mb-8 border-4 border-dashed border-indigo-100 relative overflow-hidden">
-                <QRCodeSVG value={shop.id} size={150} level="H" className="opacity-90" />
+                <QRCodeSVG value={shop.id} size={150} level="H" className="opacity-90 mx-auto" />
               </div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Your Shop ID</p>
               <p className="text-xl font-mono font-bold text-indigo-600">{shop.id}</p>
