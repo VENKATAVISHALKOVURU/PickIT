@@ -335,6 +335,12 @@ const StudentDashboard: React.FC<Props> = ({ activeJob, setActiveJob, shop, isSt
                 >
                   Enable Camera
                 </button>
+                <button
+                  onClick={() => onConnectShop('SHOP-DEMO-1')}
+                  className="mt-6 text-slate-400 font-bold text-sm active:text-indigo-600"
+                >
+                  No Camera? Skip (Demo)
+                </button>
               </div>
             )}
 
