@@ -454,7 +454,13 @@ const StudentDashboard: React.FC<Props> = ({ activeJob, setActiveJob, shop, isSt
                 <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 text-2xl mb-4 group-hover:scale-110 transition-transform"><Icons.Upload /></div>
                 <p className="text-slate-900 font-bold">Upload document</p>
                 <p className="text-slate-400 text-[10px] mt-2 font-bold uppercase tracking-widest">PDF, DOCX up to 25MB</p>
-                <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleFileUpload} />
+                <input
+                  type="file"
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
+                  onChange={handleFileUpload}
+                  accept=".pdf,.doc,.docx,.ppt,.pptx"
+                  title="Upload Document"
+                />
               </>
             )}
           </div>
