@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { PrintJob, JobStatus, Shop } from '../types';
+import { PrintJob, JobStatus, Shop, UserProfile } from '../types';
 import { Icons } from '../constants';
 import { Html5Qrcode } from 'html5-qrcode';
 import { GoogleGenAI } from "@google/genai";
@@ -11,6 +11,7 @@ interface Props {
   shop: Shop;
   isStudentConnected: boolean;
   onConnectShop: (id: string) => void;
+  user: UserProfile;
 }
 
 const UPI_APPS = [
@@ -22,7 +23,7 @@ const UPI_APPS = [
 
 type ScanState = 'IDLE' | 'EXPLAINING' | 'SCANNING' | 'SUCCESS' | 'DENIED';
 
-const StudentDashboard: React.FC<Props> = ({ activeJob, setActiveJob, shop, isStudentConnected, onConnectShop }) => {
+const StudentDashboard: React.FC<Props> = ({ activeJob, setActiveJob, shop, isStudentConnected, onConnectShop, user }) => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -198,7 +199,10 @@ const StudentDashboard: React.FC<Props> = ({ activeJob, setActiveJob, shop, isSt
                 timestamp: Date.now(),
                 expectedTimeMinutes: 8,
                 cost: currentCost,
-                shopId: shop.id
+                shopId: shop.id,
+                customerName: user?.name || 'Guest Student',
+                customerEmail: user?.email || 'student@pickit.demo',
+                customerPhone: user?.phone || '9999999999'
               };
               setActiveJob(newJob);
               setIsUploading(false);
@@ -268,6 +272,14 @@ const StudentDashboard: React.FC<Props> = ({ activeJob, setActiveJob, shop, isSt
               </div>
               <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Ready to Collect</h3>
               <p className="text-sm text-slate-400 mt-1">Visit Counter A</p>
+              <a
+                href={shop.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(shop.location || shop.name)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-6 flex items-center gap-2 px-5 py-3 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-bold shadow-sm hover:bg-indigo-100 transition-colors"
+              >
+                <i className="fa-solid fa-map-location-dot"></i> Open in Maps
+              </a>
             </div>
           ) : (
             <div className="flex flex-col items-center">
