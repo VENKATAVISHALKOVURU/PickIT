@@ -397,6 +397,13 @@ const StudentDashboard: React.FC<Props> = ({ activeJob, setActiveJob, shop, isSt
           <i className="fa-solid fa-qrcode"></i>
           Scan Shop QR
         </button>
+
+        <button
+          onClick={() => onConnectShop('SHOP-DEMO-1')}
+          className="mt-4 text-slate-400 text-sm font-bold active:text-indigo-600 transition-colors"
+        >
+          Skip Scan (Demo Mode)
+        </button>
       </div>
     );
   }
