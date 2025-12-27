@@ -12,7 +12,11 @@ type OnboardingStep = 'WELCOME' | 'ROLE' | 'DETAILS' | 'PHOTO';
 const Onboarding: React.FC<Props> = ({ onFinish }) => {
   const [step, setStep] = useState<OnboardingStep>('WELCOME');
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-  const [profile, setProfile] = useState<UserProfile>({ name: '', contact: '' });
+  const [profile, setProfile] = useState<UserProfile>({
+    name: '',
+    email: '',
+    phone: ''
+  });
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   const handleRoleSelect = (role: UserRole) => {
@@ -36,7 +40,11 @@ const Onboarding: React.FC<Props> = ({ onFinish }) => {
     return name ? name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : 'PK';
   };
 
-  const isDetailsValid = profile.name.trim().length > 0 && profile.contact.trim().length > 0;
+  const isDetailsValid =
+    profile.name.trim().length > 0 &&
+    profile.email.trim().length > 0 &&
+    profile.email.includes('@') &&
+    profile.phone.trim().length >= 10;
 
   // Progress Bar Helper
   const renderProgress = (current: number) => (
@@ -133,12 +141,22 @@ const Onboarding: React.FC<Props> = ({ onFinish }) => {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email or Phone Number</label>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address (Required)</label>
             <input
-              type="text"
-              value={profile.contact}
-              onChange={e => setProfile({ ...profile, contact: e.target.value })}
+              type="email"
+              value={profile.email}
+              onChange={e => setProfile({ ...profile, email: e.target.value })}
               placeholder="e.g. varun@college.edu"
+              className="w-full h-14 bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 font-bold text-slate-900 outline-none focus:border-indigo-600 transition-all"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Phone Number (Required)</label>
+            <input
+              type="tel"
+              value={profile.phone}
+              onChange={e => setProfile({ ...profile, phone: e.target.value })}
+              placeholder="e.g. +91 98765 43210"
               className="w-full h-14 bg-slate-50 border-2 border-slate-100 rounded-2xl px-6 font-bold text-slate-900 outline-none focus:border-indigo-600 transition-all"
             />
           </div>

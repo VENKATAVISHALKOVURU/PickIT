@@ -10,8 +10,25 @@ export enum JobStatus {
 
 export interface UserProfile {
   name: string;
-  contact: string;
+  email: string;
+  phone: string;
   photoUrl?: string;
+}
+
+export interface PrintJob {
+  id: string;
+  fileName: string;
+  pageCount: number;
+  isColor: boolean;
+  isDoubleSided: boolean;
+  status: JobStatus;
+  timestamp: number;
+  expectedTimeMinutes: number;
+  cost: number;
+  shopId: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
 }
 
 export interface PricingConfig {

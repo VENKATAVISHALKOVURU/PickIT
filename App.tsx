@@ -260,6 +260,7 @@ const App: React.FC = () => {
             shop={shop}
             isStudentConnected={isStudentConnected}
             onConnectShop={handleConnectShop}
+            user={user}
           />
         ) : (
           <OwnerDashboard
