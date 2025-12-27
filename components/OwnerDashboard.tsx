@@ -88,6 +88,36 @@ const OwnerDashboard: React.FC<Props> = ({ activeJob, updateJobStatus, shop, set
     }
   };
 
+  const handleStartPrinting = async () => {
+    if (!activeJob) return;
+    updateJobStatus(activeJob.id, JobStatus.PRINTING);
+    // Trigger Alert (Mock)
+    import('../utils/NotificationService').then(({ NotificationService }) => {
+      NotificationService.sendEmail(
+        activeJob.customerEmail,
+        `Printing Started: ${activeJob.fileName}`,
+        `Your document is now being processed at ${shop.name}. Estimated completion: ${activeJob.expectedTimeMinutes} mins.`
+      );
+    });
+  };
+
+  const handleMarkReady = async () => {
+    if (!activeJob) return;
+    updateJobStatus(activeJob.id, JobStatus.READY);
+    // Parallel Alerts (Mock)
+    import('../utils/NotificationService').then(({ NotificationService }) => {
+      NotificationService.sendEmail(
+        activeJob.customerEmail,
+        `READY FOR PICKUP: ${activeJob.fileName}`,
+        `Your print job is ready! Please collect it from ${shop.name}.\nLocation: ${shop.location}`
+      );
+      NotificationService.sendSMS(
+        activeJob.customerPhone,
+        `PickIT Alert: Your order #${activeJob.id.slice(-4)} is READY at ${shop.name}. Please collect it now!`
+      );
+    });
+  };
+
   if (setupStep > 0) {
     return (
       <div className={`animate-in fade-in slide-in-from-bottom-6 duration-500 py-6 h-full flex flex-col ${isTransitioning ? 'opacity-50 pointer-events-none' : ''}`}>
